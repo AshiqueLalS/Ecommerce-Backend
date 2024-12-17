@@ -1,11 +1,12 @@
 const userModel = require("../model/userModel")
 const bcrypt = require('bcrypt')
 const { generateToken } = require("../utils/token")
+const { cloudinaryInstance } = require("../config/cloudinaryConfig")
 
 const register = async (req, res) =>{
     try {
 
-        const { name, email, phone, password } = req.body
+        const { name, email, phone, password, image } = req.body
         
         if (!name || !email || !phone || !password) {
             return res.status(400).json({ error: "All fields are required"})
@@ -20,8 +21,13 @@ const register = async (req, res) =>{
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(password, salt)
 
+        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path)
+
+        console.log(uploadResult);
+
+
         const newUser = new userModel({
-            name, email, phone, password: hashedPassword
+            name, email, phone, password: hashedPassword, image: uploadResult.url
         })
         
         const savedUser = await newUser.save();
@@ -112,4 +118,66 @@ const checkUser = async (req, res) =>{
     }
 }
 
-module.exports = {register, login, userProfile, userLogout, checkUser}
+const userDeactivate = async (req, res) =>{
+    try {
+        const userId = req.user.id;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required, please login" });
+        }
+
+        const user = await userModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        user.isActive = false
+        await user.save() 
+
+        res.status(200).json({message: "user Deactivated successfully, please contact admin", data: user})
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(error.status || 500).json({error: error.message || "Internal server error"})
+    }
+}
+
+const updateUser = async (req,res)=>{
+    try {
+    const userId = req.user.id;
+    const { name, email, phone, image } = req.body;
+    if (!name && !email && !phone && !address) {
+        return res.status(400).json({ message: "No fields to update provided" });
+    }
+
+    const user = await userModel.findById(userId)
+
+    if(!user){
+        return res.status(404).json({message: " User not found"})
+    }
+
+    const userAlreadyExist =await userModel.findOne({email}).select("-password")
+       
+    if(userAlreadyExist){
+         return res.status(400).json({ error: "User already exists, please try different"})
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+
+
+    await user.save();
+
+
+    res.status(200).json({ message: 'User details updated successfully', data: user });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(error.status || 500).json({error: error.message || "Internal server error"})
+    }
+}
+
+module.exports = {register, login, userProfile, userLogout, checkUser, userDeactivate, updateUser}

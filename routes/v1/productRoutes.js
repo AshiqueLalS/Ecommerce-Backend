@@ -1,12 +1,15 @@
-const { productList, productDetails } = require("../../controllers/productControllers")
+const { productList, productDetails, createProduct } = require("../../controllers/productControllers")
+const { upload } = require("../../middlewares/multer")
+const { sellerAuth } = require("../../middlewares/sellerAuth")
+const { userAuth } = require("../../middlewares/userAuth")
 
 const productRouter = require("express").Router()
 
 
-productRouter.get("/products", productList )
-productRouter.get("/productDetails", productDetails)
+productRouter.get("/allProducts", productList )
+productRouter.get("/productDetails/:id", productDetails)
 
-productRouter.post("/add-product", )
+productRouter.post("/createProduct", userAuth,upload.single("image"),  createProduct)
 
 
 

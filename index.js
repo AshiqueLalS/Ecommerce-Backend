@@ -14,6 +14,10 @@ app.use(cookieParser())
 
 app.use("/api", apiRouter)
 
+app.all("*",(req, res)=>{
+    res.status(404).json({message: "end-point unavailable"})
+})
+
 app.listen(process.env.PORT, (err)=>{
     if(err){
         console.log(err)

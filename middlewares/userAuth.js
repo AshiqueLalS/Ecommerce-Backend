@@ -8,7 +8,7 @@ const userAuth = (req, res, next) =>{
         const { token } = req.cookies
 
         if(!token){
-            return res.status(401).json({ message: "Authentication Error(token missing)"})
+            return res.status(401).json({ message: "Authentication Error (token missing)"})
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
