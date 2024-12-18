@@ -1,5 +1,6 @@
 const { cloudinaryInstance } = require("../config/cloudinaryConfig");
 const { Product } = require("../model/productModel");
+const { Seller } = require("../model/sellerModel");
 
 const productList = async (req, res) => {
   try {
@@ -8,9 +9,7 @@ const productList = async (req, res) => {
     res.status(200).json({ message: "Product list Fetched", data: prodList });
   } catch (error) {
     console.log(error);
-    res
-      .status(error.status || 500)
-      .json({ error: error.message || "Internal server error" });
+    res.status(error.status || 500).json({ error: error.message || "Internal server error" });
   }
 };
 
@@ -20,14 +19,15 @@ const productDetails = async (req, res) => {
 
     const productDetails = await Product.findById(productId).populate("seller");
 
-    res
-      .status(200)
-      .json({ message: "Product Details Fetched", data: productDetails });
+    if (!productDetails) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+
+    res.status(200).json({ message: "Product Details Fetched", data: productDetails });
   } catch (error) {
     console.log(error);
-    res
-      .status(error.status || 500)
-      .json({ error: error.message || "Internal server error" });
+    res.status(error.status || 500).json({ error: error.message || "Internal server error" });
   }
 };
 
@@ -62,14 +62,10 @@ const createProduct = async (req, res) => {
     });
     await newProduct.save();
 
-    res
-      .status(200)
-      .json({ message: "Product added successfully", data: newProduct });
+    res.status(200).json({ message: "Product added successfully", data: newProduct });
   } catch (error) {
     console.log(error);
-    res
-      .status(error.status || 500)
-      .json({ error: error.message || "Internal server error" });
+    res.status(error.status || 500).json({ error: error.message || "Internal server error" });
   }
 };
 

@@ -90,7 +90,7 @@ const clearCart = async (req,res) =>{
         cart.calculateTotalPrice()
         await cart.save()
 
-        res.status(200).json({message: "removed cart items successfully", data: cart})
+        res.status(200).json({message: "Deleted cart items successfully", data: cart})
         
     } catch (error) {
         console.log(error);
