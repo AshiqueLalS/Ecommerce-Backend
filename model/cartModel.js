@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { Product } = require('./productModel')
 
 const cartSchema = new mongoose.Schema(
     {
@@ -11,7 +12,7 @@ const cartSchema = new mongoose.Schema(
             {
                 productId: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "products",
+                    ref: "product",
                     required: true,
                 },
                 price: {
@@ -28,7 +29,7 @@ const cartSchema = new mongoose.Schema(
             type: Number,
             required: true,
             default: 0,
-        }
+        },
     }, {timestamps: true}
 )
 
@@ -38,3 +39,4 @@ cartSchema.methods.calculateTotalPrice = function() {
 const Cart = mongoose.model("Cart", cartSchema)
 
 module.exports = {Cart}
+

@@ -56,6 +56,8 @@ const addToCart = async (req, res) =>{
     }
 }
 
+
+
 const removeProductCart = async (req, res) =>{
     try {
         const userId = req.user.id
