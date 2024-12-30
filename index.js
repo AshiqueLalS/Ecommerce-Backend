@@ -11,11 +11,15 @@ const app = express()
 connectDB()
 
 app.use(express.json())
-app.use(cors({origin: "http://localhost:5173",
+app.use(cors({origin: ["http://localhost:5173","https://ecommerce-front-end-client.vercel.app"],
     credentials: true,
     methods: ["GET","POST","PUT","DELETE"]
 }))
 app.use(cookieParser())
+
+app.get("/",(req,res,next)=>{
+    res.json("Hello World")
+})
 
 app.use("/api", apiRouter)
 
