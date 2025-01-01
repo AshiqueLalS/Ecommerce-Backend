@@ -66,7 +66,10 @@ const login = async (req, res) =>{
         }
 
         const token = generateToken(user, "user")
-        res.cookie("token", token, {sameSite: "none"})
+        res.cookie("token", token, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,})
         
         const { password: _, ...userWithOutPassword } = user._doc;
 
