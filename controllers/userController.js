@@ -66,7 +66,7 @@ const login = async (req, res) =>{
         }
 
         const token = generateToken(user, "user")
-        res.cookie("token", token)
+        res.cookie("token", token, {sameSite: "none"})
         
         const { password: _, ...userWithOutPassword } = user._doc;
 
