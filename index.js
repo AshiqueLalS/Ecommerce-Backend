@@ -11,9 +11,9 @@ const app = express()
 connectDB()
 
 app.use(express.json())
-app.use(cors({origin: ["http://localhost:5173","https://ecommerce-front-end-clien-git-21a956-ashiques-projects-08d5f61e.vercel.app"],
+app.use(cors({origin: ["http://localhost:5173","https://ecommerce-front-end-client.vercel.app"],
     credentials: true,
-    methods: ["GET","POST","PUT","DELETE"]
+    methods: ["GET","POST","PUT","DELETE","OPTIONS"]
 }))
 app.use(cookieParser())
 
