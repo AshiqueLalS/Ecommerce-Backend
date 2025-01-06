@@ -9,7 +9,7 @@ const productRouter = require("express").Router()
 productRouter.get("/allProducts", productList )
 productRouter.get("/productDetails/:productId", productDetails)
 
-productRouter.post("/createProduct", userAuth,upload.single("image"),  createProduct)
+productRouter.post("/create-product", userAuth,upload.single("image"),  createProduct)
 
 
 

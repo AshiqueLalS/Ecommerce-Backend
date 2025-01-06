@@ -5,10 +5,13 @@ const { cloudinaryInstance } = require("../config/cloudinaryConfig")
 
 const register = async (req, res) =>{
     try {
+       
+        const { name, email, phone, password, address, image } = req.body
 
-        const { name, email, phone, password, image } = req.body
+        console.log(req.body)
+        console.log(image)
         
-        if (!name || !email || !phone || !password) {
+        if (!name || !email || !phone || !password || !address) {
             return res.status(400).json({ error: "All fields are required"})
         }
 
@@ -21,17 +24,20 @@ const register = async (req, res) =>{
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(password, salt)
 
-        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path)
+        const uploadResult = await cloudinaryInstance.uploader.upload(req?.file?.path)
 
         console.log(uploadResult);
 
+        
+
 
         const newUser = new userModel({
-            name, email, phone, password: hashedPassword, image: uploadResult.url
+            name, email, phone, password: hashedPassword, address, image: uploadResult.url
         })
         
-        const savedUser = await newUser.save();
+        const {_doc:user} = await newUser.save();
 
+        const {password: pwd, ...savedUser} = user
         
         res.status(200).json({ message: "User created successfully",data: savedUser})
         
@@ -150,7 +156,7 @@ const userDeactivate = async (req, res) =>{
 const updateUser = async (req,res)=>{
     try {
     const userId = req.user.id;
-    const { name, email, phone, image } = req.body;
+    const { name, email, phone, image, address} = req.body;
     if (!name && !email && !phone && !address) {
         return res.status(400).json({ message: "No fields to update provided" });
     }
@@ -170,6 +176,7 @@ const updateUser = async (req,res)=>{
     if (name) user.name = name;
     if (email) user.email = email;
     if (phone) user.phone = phone;
+    if (phone) user.address = address;
 
 
     await user.save();

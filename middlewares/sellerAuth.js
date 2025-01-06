@@ -21,7 +21,7 @@ const sellerAuth = (req, res, next) =>{
             return res.status(401).json({message: "Unautherized User"})
         }
 
-        req.user = decoded
+        req.seller = decoded
         next()
         
     } catch (error) {
