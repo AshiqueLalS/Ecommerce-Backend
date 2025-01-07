@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     address:{
         type: String,
     },
+    role:{
+        type: String,
+        default: "user",
+    },
     isActive: {
         type: Boolean,
         default: true

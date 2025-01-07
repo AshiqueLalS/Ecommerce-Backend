@@ -2,6 +2,7 @@ const userModel = require("../model/userModel")
 const bcrypt = require('bcrypt')
 const { generateToken } = require("../utils/token")
 const { cloudinaryInstance } = require("../config/cloudinaryConfig")
+const sellerModel = require("../model/sellerModel")
 
 const register = async (req, res) =>{
     try {
@@ -119,7 +120,18 @@ const userLogout = async (req, res) =>{
 }
 const checkUser = async (req, res) =>{
     try {
-        res.status(200).json({message: "Autherized User"})
+        const userId = req.user.id
+        const userData = await userModel.findById(userId).select("-password")
+
+        let sellerData
+        if(!userData){
+            sellerData = await sellerModel.findById(userId).select("-password")
+        }
+
+       
+        
+        
+        res.status(200).json({message: "Autherized User",data: userData|| sellerData})
 
     } catch (error) {
         console.log(error);
