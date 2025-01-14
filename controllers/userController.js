@@ -76,7 +76,7 @@ const login = async (req, res) =>{
         res.cookie("token", token, {
             httpOnly: true,
             sameSite: "none",
-            secure: true,})
+            secure:true ,})
         
         const { password: _, ...userWithOutPassword } = user._doc;
 
@@ -108,8 +108,13 @@ const userProfile = async (req, res) =>{
 const userLogout = async (req, res) =>{
     try {
 
+        res.clearCookie("token", { 
+            httpOnly: true, 
+            sameSite: "none", 
+            secure: true 
+        });
 
-        res.clearCookie("token")
+        // res.clearCookie("token")
 
         res.status(200).json({message: "User logout Success"})
 
