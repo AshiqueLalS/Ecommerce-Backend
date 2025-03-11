@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema(
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "product",
         required: true,
       },
     ],
@@ -24,8 +24,8 @@ const orderSchema = new mongoose.Schema(
       default: 0,
     },
     orderStatus: {
-        type: String,
-        enum: ["processing","transit","out-for-delevery","delevered"]
+      type: String,
+      enum: ["processing", "out-for-delivery", "delivered"],
     },
   },
   { timestamps: true }

@@ -1,6 +1,7 @@
 const sellerModel = require("../model/sellerModel")
 const bcrypt = require('bcrypt')
 const { generateToken } = require("../utils/token")
+const userModel = require("../model/userModel")
 
 const sellerRegister = async (req, res) =>{
     try {
@@ -101,6 +102,17 @@ const sellerProfile = async (req, res) =>{
     }
 }
 
+const dataFetch = async (req,res) =>{
+try {
+    const userList = await userModel.find().select("name email address");
+
+    res.status(200).json({ message: "Users list Fetched", data: userList }); 
+} catch (error) {
+    console.log(error);
+        res.status(error.status || 500).json({error: error.message || "Internal server error"})
+}
+}
+
 const sellerLogout = async (req, res) =>{
     try {
 
@@ -115,4 +127,4 @@ const sellerLogout = async (req, res) =>{
     }
 }
 
-module.exports = {sellerLogin,sellerRegister,sellerProfile,sellerLogout}
+module.exports = {sellerLogin,sellerRegister,sellerProfile,sellerLogout, dataFetch}
