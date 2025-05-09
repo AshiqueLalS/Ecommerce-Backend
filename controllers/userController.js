@@ -25,15 +25,19 @@ const register = async (req, res) =>{
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(password, salt)
 
-        const uploadResult = await cloudinaryInstance.uploader.upload(req?.file?.path)
+        let uploadResult = null
+        if(req?.file?.path && req?.file?.path!=="undefined"){
+            
+            uploadResult = await cloudinaryInstance.uploader.upload(req?.file?.path)
+            console.log(uploadResult);
+        }
 
-        console.log(uploadResult);
 
         
 
 
         const newUser = new userModel({
-            name, email, phone, password: hashedPassword, address, image: uploadResult.url
+            name, email, phone, password: hashedPassword, address, image: uploadResult?.url
         })
         
         const {_doc:user} = await newUser.save();
